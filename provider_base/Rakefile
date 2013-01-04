@@ -1,0 +1,9 @@
+require 'yaml'
+
+task "test" do
+  puts "Testing Service: #{ENV['SERVICE']}"
+  puts "  using #{ENV['CONFIG']}"
+  CONFIG = YAML.load_file(ENV['CONFIG'])
+  puts "  testing service on #{CONFIG['domain']["full"]}"
+  puts "now we should load test files relative to #{__FILE__}"
+end
