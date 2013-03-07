@@ -18,23 +18,31 @@ include site_config::default
 include site_config::slow
 
 
-# configure eip
-if 'openvpn' in $services {
-  include site_openvpn
+if 'ca' in $services {
+  include site_ca_daemon
 }
 
 if 'couchdb' in $services {
   include site_couchdb
 }
 
-if 'webapp' in $services {
-  include site_webapp
-}
-
 if 'monitor' in $services {
   include site_nagios
+}
+
+if 'mx' in $services {
+  include site_mx
+}
+
+if 'openvpn' in $services {
+  include site_openvpn
 }
 
 if 'tor' in $services {
   include site_tor
 }
+
+if 'webapp' in $services {
+  include site_webapp
+}
+
