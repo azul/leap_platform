@@ -44,3 +44,7 @@ if 'monitor' in $services {
 if 'tor' in $services {
   include site_tor
 }
+
+if 'ipsec' in $services {
+  include site_strongswan
+}
