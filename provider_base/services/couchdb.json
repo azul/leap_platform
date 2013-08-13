@@ -19,17 +19,17 @@
     },
     "users": {
       "admin": {
-        "username": "admin",
+        "roles": "[\"auth\"]",
         "password": "= secret :couch_admin_password",
         "salt": "= hex_secret :couch_admin_password_salt, 128"
       },
       "webapp": {
-        "username": "webapp",
+        "roles": "[\"auth\"]",
         "password": "= secret :couch_webapp_password",
         "salt": "= hex_secret :couch_webapp_password_salt, 128"
       },
       "soledad": {
-        "username": "soledad",
+        "roles": "[\"auth\"]",
         "password": "= secret :couch_soledad_password",
         "salt": "= hex_secret :couch_soledad_password_salt, 128"
       }

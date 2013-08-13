@@ -9,17 +9,9 @@ class site_couchdb {
   $couchdb_config         = hiera('couch')
   $couchdb_users          = $couchdb_config['users']
   $couchdb_admin          = $couchdb_users['admin']
-  $couchdb_admin_user     = $couchdb_admin['username']
   $couchdb_admin_pw       = $couchdb_admin['password']
   $couchdb_admin_salt     = $couchdb_admin['salt']
-  $couchdb_webapp         = $couchdb_users['webapp']
-  $couchdb_webapp_user    = $couchdb_webapp['username']
-  $couchdb_webapp_pw      = $couchdb_webapp['password']
-  $couchdb_webapp_salt    = $couchdb_webapp['salt']
-  $couchdb_soledad        = $couchdb_users['soledad']
-  $couchdb_soledad_user   = $couchdb_soledad['username']
-  $couchdb_soledad_pw     = $couchdb_soledad['password']
-  $couchdb_soledad_salt   = $couchdb_soledad['salt']
+
 
   $bigcouch_config        = $couchdb_config['bigcouch']
   $bigcouch_cookie        = $bigcouch_config['cookie']
@@ -41,8 +33,8 @@ class site_couchdb {
     -> Class ['site_couchdb::bigcouch::add_nodes']
     -> Couchdb::Create_db['users']
     -> Couchdb::Create_db['tokens']
-    -> Couchdb::Add_user[$couchdb_webapp_user]
-    -> Couchdb::Add_user[$couchdb_soledad_user]
+    -> Couchdb::Add_user['webapp']
+    -> Couchdb::Add_user['soledad']
 
   class { 'site_couchdb::stunnel':
     key  => $key,
@@ -53,22 +45,12 @@ class site_couchdb {
   class { 'site_couchdb::bigcouch::add_nodes': }
 
   couchdb::query::setup { 'localhost':
-    user  => $couchdb_admin_user,
+    user  => 'admin',
     pw    => $couchdb_admin_pw,
   }
 
   # Populate couchdb
-  couchdb::add_user { $couchdb_webapp_user:
-    roles => '["auth"]',
-    pw    => $couchdb_webapp_pw,
-    salt  => $couchdb_webapp_salt
-  }
-
-  couchdb::add_user { $couchdb_soledad_user:
-    roles => '["auth"]',
-    pw    => $couchdb_soledad_pw,
-    salt  => $couchdb_soledad_salt
-  }
+  create_resources(couchdb::add_user, $couchdb_users)
 
   couchdb::create_db { 'users':
     readers => "{ \"names\": [\"$couchdb_webapp_user\"], \"roles\": [] }"
